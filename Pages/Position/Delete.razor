@@ -1,0 +1,40 @@
+﻿@page "/deleteposition/{id:int}"
+@using lab6.Data
+@using lab6.Services
+@inherits OwningComponentBase<PositionServices>
+
+<h1>Delete position</h1>
+
+<EditForm Model="_position" OnValidSubmit="DeletePosition">
+	<label>Name</label>
+	<input value="@_position.Name" readonly />
+	<br/>
+	
+	<label>Salary</label>
+	<input value="@_position.Salary" readonly />
+	<br/>
+	<button type="submit">Delete position</button>
+	<button><a href="/positions">Return to all positions</a></button>
+
+</EditForm>
+
+@code {
+	[Inject] NavigationManager navigationManager{ get; set; } = null!;
+	[Parameter] public int id { get; set; }
+	private Position _position = new Position();
+
+	protected override async Task OnParametersSetAsync()
+	{
+		if(id <= 0)
+		{
+			navigationManager.NavigateTo("/positions");
+		}
+		_position = await Service.GetPosition(id);
+	}
+
+	private async Task DeletePosition()
+	{
+		await Service.DeletePosition(_position);
+		navigationManager.NavigateTo("/positions");
+	}
+}

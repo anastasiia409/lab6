@@ -1,0 +1,55 @@
+﻿@page "/editposition/{id:int}"
+@using lab6.Data
+@using lab6.Services
+@inherits OwningComponentBase<PositionServices>
+
+<h1>Edit position</h1>
+
+<EditForm Model="_position" OnValidSubmit="EditPosition">
+	<label for="name">Name employee</label>
+	<InputText @bind-Value="_position.Name" id="name" />
+	<br/>
+	<label>Salary</label>
+	<InputNumber @bind-Value="_position.Salary"  />
+	<br/>
+
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+
+
+	<button type="submit">Add new position</button>
+	<button><a href="/employees">Return to all positions</a></button>
+
+</EditForm>
+
+@code {
+	[Inject] NavigationManager navigationManager{ get; set; } = null!;
+	[Parameter] public int id { get; set; }
+	private Position _position = new Position();
+
+	protected override async Task OnParametersSetAsync()
+	{
+		if(id < 0)
+		{
+			navigationManager.NavigateTo("/positions");
+		}
+
+		if (id != 0)
+		{
+			_position = await Service.GetPosition(id);
+		}
+	}
+
+	private async Task EditPosition()
+	{
+		if (id == 0)
+		{
+			await Service.AddPosition(_position);
+		}
+		else
+		{
+			await Service.EditPosition(_position);
+		}
+		navigationManager.NavigateTo("/positions");
+	}
+}

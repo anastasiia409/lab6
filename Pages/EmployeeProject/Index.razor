@@ -1,0 +1,71 @@
+﻿@page "/employeeprojects"
+@using lab6.Data
+@using lab6.Services
+@inherits OwningComponentBase<EmployeeProjectServices>
+
+<h1>All employee projects</h1>
+<a href="/editemployeeproject/0" class="btn btn-primary">Add new employee project</a>
+<table class="table table-bordered table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Employee name
+            </th>
+            <th>
+                Project name
+            </th>
+            <th>
+                Position name
+            </th>
+            <th>
+                DateOfJoin
+            </th>
+            <th>
+
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var eproject in eprojects)
+        {
+            <tr>
+                <td>
+                    @eproject.Id
+                </td>
+                <td>
+                    @eproject.Employee.Name
+                </td>
+                <td>
+                    @eproject.Project.Name
+                </td>
+                <td>
+                    @eproject.Position.Name
+                </td>
+                <td>
+                    @eproject.DateOfJoin
+                </td>
+                <td>
+                    <a href="/editemployeeproject/@eproject.Id" class="btn btn-warning">Edit employee project</a>
+                </td>
+                <td>
+                    <a href="/deleteemployeeproject/@eproject.Id" asp-route-id="@eproject.Id" class="btn btn-danger">Delete employee project</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    List<EmployeeProject> eprojects = new List<EmployeeProject>();
+
+	protected override async Task OnInitializedAsync()
+	{
+		eprojects = await Service.GetEmployeeProjects();
+	}
+}

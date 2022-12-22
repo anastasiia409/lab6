@@ -1,0 +1,45 @@
+﻿@page "/deleteemployeeproject/{id:int}"
+@using lab6.Data
+@using lab6.Services
+@inherits OwningComponentBase<EmployeeProjectServices>
+
+<h1>Delete employee project</h1>
+
+<EditForm Model="_employeeproject" OnValidSubmit="DeleteEmployeeProject">
+	<label>Name</label>
+	<input value="@_employeeproject.Employee.Name" readonly />
+	<br/>
+	<label>Surname</label>
+	<input value="@_employeeproject.Project.Name" readonly />
+	<br/>
+	<label>Address</label>
+	<input value="@_employeeproject.Position.Name" readonly />
+	<br/>
+	<label>Description</label>
+	<input value="@_employeeproject.DateOfJoin" readonly />
+	<br/>
+	<button type="submit">Delete employee project</button>
+	<button><a href="/employeeprojects">Return to all employee projects</a></button>
+
+</EditForm>
+
+@code {
+	[Inject] NavigationManager navigationManager{ get; set; } = null!;
+	[Parameter] public int id { get; set; }
+	private EmployeeProject _employeeproject = new EmployeeProject();
+
+	protected override async Task OnParametersSetAsync()
+	{
+		if(id <= 0)
+		{
+			navigationManager.NavigateTo("/employeeprojects");
+		}
+		_employeeproject = await Service.GetEmployeeProject(id);
+	}
+
+	private async Task DeleteEmployeeProject()
+	{
+		await Service.DeleteEmployeeProject(_employeeproject);
+		navigationManager.NavigateTo("/employeeprojects");
+	}
+}

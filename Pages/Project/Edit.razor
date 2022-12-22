@@ -1,0 +1,63 @@
+@page "/editprojects/{id:int}"
+@using lab6.Data
+@using lab6.Services
+@inherits OwningComponentBase<ProjectServices>
+
+<h1>Edit project</h1>
+
+<EditForm Model="_project" OnValidSubmit="EditProject">
+	<label for="name">Name of project</label>
+	<InputText @bind-Value="_project.Name" />
+	<br/>
+	<label>DateOfStart</label>
+	<InputDate @bind-Value="_project.DateOfStart"/>
+	<br/>
+	<label>DateOfEnd</label>
+	<InputDate @bind-Value="_project.DateOfEnd"  />
+	<br/>
+	<label>Description</label>
+	<InputText @bind-Value="_project.Description"  />
+	<br/>
+
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+
+
+	<button type="submit">Add new project</button>
+	<button><a href="/projects">Return to all projects</a></button>
+
+</EditForm>
+
+@code {
+	[Inject] NavigationManager navigationManager{ get; set; } = null!;
+	[Parameter] public int id { get; set; }
+	private Project _project = new Project();
+
+	protected override async Task OnParametersSetAsync()
+	{
+		if(id < 0)
+		{
+			navigationManager.NavigateTo("/projects");
+		}
+
+		if (id != 0)
+		{
+			_project = await Service.GetProject(id);
+		}
+	}
+
+	private async Task EditProject()
+	{
+		if (id == 0)
+		{
+			await Service.AddProject(_project);
+		}
+
+		
+		else
+		{
+			await Service.EditProject(_project);
+		}
+		navigationManager.NavigateTo("/projects");
+	}
+}

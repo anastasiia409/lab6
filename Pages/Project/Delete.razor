@@ -1,0 +1,45 @@
+@page "/deleteproject/{id:int}"
+@using lab6.Data
+@using lab6.Services
+@inherits OwningComponentBase<ProjectServices>
+
+<h1>Delete project</h1>
+
+<EditForm Model="_project" OnValidSubmit="DeleteProject">
+	<label>Name</label>
+	<input value="@_project.Name" readonly />
+	<br/>
+	<label>DateOfStart</label>
+	<input value="@_project.DateOfStart" readonly />
+	<br/>
+	<label>DateOfEnd</label>
+	<input value="@_project.DateOfEnd" readonly />
+	<br/>
+	<label>Description</label>
+	<input value="@_project.Description" readonly />
+	<br/>
+	<button type="submit">Delete project</button>
+	<button><a href="/books">Return to all projects</a></button>
+
+</EditForm>
+
+@code {
+	[Inject] NavigationManager navigationManager{ get; set; } = null!;
+	[Parameter] public int id { get; set; }
+	private Project _project = new Project();
+
+	protected override async Task OnParametersSetAsync()
+	{
+		if(id <= 0)
+		{
+			navigationManager.NavigateTo("/projects");
+		}
+		_project = await Service.GetProject(id);
+	}
+
+	private async Task DeleteProject()
+	{
+		await Service.DeleteProject(_project);
+		navigationManager.NavigateTo("/employees");
+	}
+}

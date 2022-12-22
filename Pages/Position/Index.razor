@@ -1,0 +1,61 @@
+﻿@page "/positions"
+@using lab6.Data
+@using lab6.Services
+@inherits OwningComponentBase<PositionServices>
+
+<h1>All positions</h1>
+<a href="/editposition/0" class="btn btn-primary">Add new position</a>
+<table class="table table-bordered table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Salary
+            </th>
+           
+            <th>
+
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var position in positions)
+        {
+            <tr>
+                <td>
+                    @position.Id
+                </td>
+                <td>
+                    @position.Name
+                </td>
+                <td>
+                    @position.Salary
+                </td>
+               
+                <td>
+                    <a href="/editemployee/@position.Id" class="btn btn-warning">Edit position</a>
+                </td>
+                <td>
+                    <a href="/deleteemployee/@position.Id" asp-route-id="@position.Id" class="btn btn-danger">Delete position</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    List<Position> positions = new List<Position>();
+
+	protected override async Task OnInitializedAsync()
+	{
+		positions = await Service.GetPositions();
+	}
+}
