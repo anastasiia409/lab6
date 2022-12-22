@@ -10,7 +10,7 @@ namespace lab6.Data
         public int PositionId { get; set; }
         public int ProjectId { get; set; }
         public DateTime? DateOfJoin { get; set; }
-        public Position Employee { get; set; } = null!;
+        public Employee Employee { get; set; } = null!;
         public Project Project { get; set; } = null!;
         public Position Position { get; set; } = null!;
     }
